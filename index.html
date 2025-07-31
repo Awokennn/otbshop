@@ -73,6 +73,48 @@
       display: block;
     }
 
+    /* ITEM STYLE */
+    .item {
+      background: #002b36;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border: 1px solid #00ced1;
+    }
+
+    .item h3 {
+      margin: 0 0 10px;
+      color: #00ced1;
+    }
+
+    .item p {
+      margin: 5px 0;
+    }
+
+    .item button {
+      background: #00ced1;
+      border: none;
+      padding: 10px 20px;
+      color: black;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .item button:disabled {
+      background: grey;
+      cursor: not-allowed;
+    }
+
+    /* CART */
+    #cart {
+      background: #001a24;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 30px;
+      border: 1px solid #00ced1;
+    }
+
     #ash-container {
       position: fixed;
       top: 0;
@@ -127,6 +169,21 @@
   <section id="home" class="active">
     <h2>Welcome to OTB Shop</h2>
     <p>Trusted seller · Fast delivery · Legit items.</p>
+
+    <div class="item">
+      <h3>Common Stack</h3>
+      <p>Price: 10 Robux</p>
+      <p>Stock: <span id="stock">5</span> available</p>
+      <p>Limit: 1 per buyer</p>
+      <button id="buyButton" onclick="addToCart('Common Stack', 10)">Add to Cart</button>
+    </div>
+
+    <div id="cart">
+      <h3>Shopping Cart</h3>
+      <ul id="cart-items"></ul>
+      <p>Total: <strong><span id="total">0</span> Robux</strong></p>
+      <button onclick="checkout()">Checkout</button>
+    </div>
   </section>
 
   <!-- PROOFS -->
@@ -150,6 +207,10 @@
   </footer>
 
   <script>
+    let stock = 5;
+    const cart = [];
+    let boughtCommonStack = false;
+
     // MENU TOGGLE
     function toggleMenu() {
       const menu = document.getElementById('navMenu');
@@ -163,6 +224,64 @@
       });
       document.getElementById(tabId).classList.add('active');
       document.getElementById('navMenu').style.display = 'none';
+    }
+
+    // ADD TO CART
+    function addToCart(name, price) {
+      if (boughtCommonStack) {
+        alert("You can only buy 1 Common Stack.");
+        return;
+      }
+      if (stock <= 0) {
+        alert("Out of stock!");
+        return;
+      }
+
+      cart.push({ name, price, quantity: 1 });
+      stock--;
+      boughtCommonStack = true;
+
+      document.getElementById('stock').textContent = stock;
+      if (stock <= 0) {
+        document.getElementById('buyButton').disabled = true;
+      }
+
+      renderCart();
+    }
+
+    // RENDER CART
+    function renderCart() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ${item.price} Robux`;
+        cartItems.appendChild(li);
+        total += item.price;
+      });
+      document.getElementById('total').textContent = total;
+    }
+
+    // CHECKOUT
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+
+      let message = `Join the Discord here: https://discord.gg/pYTWrWh7W8\n\nCreate a ticket showing what you wanted and we will send a gamepass for you to buy, then give the items!\n\nOrder summary:\n`;
+
+      cart.forEach(item => {
+        message += `${item.name} - ${item.price} Robux\n`;
+      });
+
+      message += `\nTotal: ${cart.reduce((sum, item) => sum + item.price, 0)} Robux`;
+
+      alert(message);
+
+      cart.length = 0;
+      renderCart();
     }
 
     // FALLING TEXT
