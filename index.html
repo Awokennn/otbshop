@@ -8,20 +8,33 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #ffffff, #000000);
-      color: #000;
+      background: linear-gradient(to top, #013220, #8fbc8f); /* Dark green → pea green */
+      color: #fff;
       overflow-x: hidden;
     }
 
     header {
-      background: #001f3f; /* Navy Blue */
+      background: transparent; /* Transparent so gradient shows */
       padding: 20px;
       text-align: center;
-      color: #ffffff;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 48px;
+      background: linear-gradient(to top, #013220, #8fbc8f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
+
+    header p {
+      margin-top: 5px;
+      color: #d0ffd0; /* Light green subtitle */
     }
 
     nav {
-      background: #001f3f;
+      background: #013220;
       display: flex;
       justify-content: center;
       gap: 25px;
@@ -29,7 +42,7 @@
     }
 
     nav a {
-      color: #00aaff;
+      color: #8fbc8f;
       text-decoration: none;
       font-weight: bold;
     }
@@ -45,20 +58,20 @@
     }
 
     .item {
-      background: #f0f0f0;
+      background: #1b4020;
       padding: 15px;
       margin: 15px 0;
       border-radius: 8px;
-      color: #000;
+      color: #fff;
     }
 
     .item h3 {
       margin: 0 0 10px;
-      color: #001f3f;
+      color: #a8d5a2;
     }
 
     .item button {
-      background: #00aaff;
+      background: #3cb371;
       border: none;
       padding: 10px 20px;
       color: white;
@@ -67,15 +80,15 @@
     }
 
     .item button:hover {
-      background: #0077aa;
+      background: #2e8b57;
     }
 
     #cart {
-      background: #e6f2ff;
+      background: #123d20;
       padding: 20px;
       border-radius: 10px;
       margin-top: 30px;
-      color: #000;
+      color: #fff;
     }
 
     #ash-container {
@@ -90,8 +103,8 @@
 
     .ash {
       position: absolute;
-      color: #ffffff; /* White ashes */
-      opacity: 0.5;
+      color: #ffffff; /* White falling text */
+      opacity: 0.6;
       font-size: 20px;
       font-weight: bold;
       user-select: none;
@@ -104,8 +117,8 @@
     }
 
     footer {
-      background: #001f3f;
-      color: #00aaff;
+      background: #013220;
+      color: #8fbc8f;
       text-align: center;
       padding: 20px;
       margin-top: 40px;
@@ -165,6 +178,10 @@
     function addToCart(name, price) {
       const existing = cart.find(item => item.name === name);
       if (existing) {
+        if (existing.quantity >= 2) {
+          alert("Maximum quantity for this item is 2.");
+          return;
+        }
         existing.quantity++;
       } else {
         cart.push({ name, price, quantity: 1 });
